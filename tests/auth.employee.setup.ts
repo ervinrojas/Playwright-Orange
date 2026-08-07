@@ -35,6 +35,6 @@ setup('Authentication as Employee', async ({ page }) => {
     await validateAndRegenerateState(
         page, 'Employee', '.auth/employee.json',
         (loginPage) => loginPage.login(Environment.EMPLOYEE_USERNAME, Environment.EMPLOYEE_PASSWORD),
-        (pg) => expect(pg.getByRole('link', { name: 'Admin' })).toBeHidden()
+        (pg) => expect(pg.getByRole('link', { name: 'My Info' })).toBeVisible()
     );
 });

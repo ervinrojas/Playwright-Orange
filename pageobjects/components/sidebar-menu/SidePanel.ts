@@ -16,7 +16,6 @@ export enum SideMenuOptions {
 }
 
 export class SidePanel {
-
     readonly page: Page;
     private readonly container: Locator;
     private readonly searchInput: Locator;
@@ -24,19 +23,20 @@ export class SidePanel {
 
     constructor(page: Page) {
         this.page = page;
-        this.container = page.locator('.oxd-sidepanel-body');
-        this.searchInput = page.getByRole('textbox', {name: 'Search'});
-        this.menuItems = this.container.locator('.oxd-main-menu-item');
-        //this.visibleMenuItem = this.menuItems.filter({visible: true});
+        this.container = page.getByLabel(/sidepanel|sidebar/i).first();
+        this.searchInput = page.getByRole('textbox', { name: /search/i });
+        this.menuItems = this.container.getByRole('link');
     }
 
     async waitForLoaded() {
-        await this.container.waitFor({state: 'visible'});
-        await this.menuItems.first().waitFor({state: 'visible'});
+        await this.container.waitFor({ state: 'visible' });
+        await this.menuItems.first().waitFor({ state: 'visible' });
     }
 
     async clickMenu(option: SideMenuOptions) {
-        await this.menuItems.getByRole('link', {name: option, exact: true}).click();
+        const menuItem = this.menuItems.filter({ hasText: option }).first();
+        await menuItem.waitFor({ state: 'visible' });
+        await menuItem.click();
     }
 
     async getAllVisibleTexts(): Promise<string[]> {
@@ -47,9 +47,9 @@ export class SidePanel {
 
     async searchOption(option: SideMenuOptions): Promise<Locator> {
         await this.searchInput.fill(option);
-        const filteredItems = this.menuItems.filter({hasText: option}).first();
-        await filteredItems.waitFor({state: 'visible'});
-        return filteredItems; // Wait for the search results to update
+        const filteredItems = this.menuItems.filter({ hasText: option }).first();
+        await filteredItems.waitFor({ state: 'visible' });
+        return filteredItems;
     }
     /*static readonly EXPECTED_MENU_ITEMS = [
         'Admin',

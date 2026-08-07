@@ -7,14 +7,15 @@
   "scripts": {
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
-    "report": "npx playwright show-report",
     "test:debug": "npx playwright test --debug",
     "test:ui": "npx playwright test --ui",
-
-    "test:setup": "npx playwright test --project=setup",
+    "report": "npx playwright show-report",
+    "test:admin-setup": "npx playwright test --project=admin-setup",
+    "test:employee-setup": "npx playwright test --project=employee-setup",
     "test:admin": "npx playwright test --project=admin",
     "test:employee": "npx playwright test --project=employee",
-    "test:unauthenticated": "npx playwright test --project=unauthenticated"
+    "test:unauthenticated": "npx playwright test --project=unauthenticated",
+    "test:ci": "npx playwright test --project=admin --project=employee --project=unauthenticated"
   },
 
   "repository": {
