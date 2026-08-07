@@ -4,6 +4,8 @@ import { LoginPage } from '../pageobjects/pages/LoginPage';
 import { Environment } from '../config/environment';
 
 async function validateAndRegenerateState(page: Page, role: string, authFilePath: string, loginAction: (loginPage: LoginPage) => Promise<void>, validationAction: (pageToValidate: Page) => Promise<void>) {
+    fs.mkdirSync('.auth', { recursive: true });
+
     if (fs.existsSync(authFilePath)) {
         console.log(`[Setup] ${role}: Auth file found. Validating session...`);
         const browser = await chromium.launch({ headless: true });

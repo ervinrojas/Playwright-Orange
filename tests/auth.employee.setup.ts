@@ -5,6 +5,9 @@ import { Environment } from '../config/environment';
 
 // Copiamos la misma función auxiliar aquí (En TS no hay herencia múltiple fácil para setups)
 async function validateAndRegenerateState(page: Page, role: string, authFilePath: string, loginAction: (loginPage: LoginPage) => Promise<void>, validationAction: (pageToValidate: Page) => Promise<void>) {
+    const authDir = '.auth';
+    fs.mkdirSync(authDir, { recursive: true });
+
     if (fs.existsSync(authFilePath)) {
         console.log(`[Setup] ${role}: Auth file found. Validating session...`);
         const browser = await chromium.launch({ headless: true });
