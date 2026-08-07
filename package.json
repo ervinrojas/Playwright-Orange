@@ -1,23 +1,36 @@
 {
   "name": "playwright-orange",
   "version": "1.0.0",
-  "description": "",
+  "description": "Playwright E2E Test for OrangeHRM",
   "main": "index.js",
-  "scripts": {},
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "report": "npx playwright show-report",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+
+    "test:setup": "npx playwright test --project=setup",
+    "test:admin": "npx playwright test --project=admin",
+    "test:employee": "npx playwright test --project=employee",
+    "test:unauthenticated": "npx playwright test --project=unauthenticated"
+  },
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ervinrojas/Playwright-Orange.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["playwright", "e2e", "testing", "automation", "typescript"],
+  "author": "Ervin Rojas",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/ervinrojas/Playwright-Orange/issues"
   },
   "homepage": "https://github.com/ervinrojas/Playwright-Orange#readme",
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.1"
+    "@types/node": "^26.1.1",
+    "dotenv": "^17.4.2"
   }
 }
