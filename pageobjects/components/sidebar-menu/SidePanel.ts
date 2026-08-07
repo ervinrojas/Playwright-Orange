@@ -15,6 +15,8 @@ export enum SideMenuOptions {
     BUZZ = 'Buzz'
 }
 
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 export class SidePanel {
     readonly page: Page;
     private readonly container: Locator;
@@ -23,9 +25,13 @@ export class SidePanel {
 
     constructor(page: Page) {
         this.page = page;
-        this.container = page.getByLabel(/sidepanel|sidebar/i).first();
-        this.searchInput = page.getByRole('textbox', { name: /search/i });
+        this.container = page.getByLabel(/sidepanel|sidebar/i).filter({ has: page.getByRole('link') }).first();
+        this.searchInput = page.getByRole('textbox', { name: /search/i }).first();
         this.menuItems = this.container.getByRole('link');
+    }
+
+    private getMenuItem(option: SideMenuOptions): Locator {
+        return this.page.getByRole('link', { name: new RegExp(`^${escapeRegExp(option)}$`, 'i') }).first();
     }
 
     async waitForLoaded() {
@@ -34,8 +40,8 @@ export class SidePanel {
     }
 
     async clickMenu(option: SideMenuOptions) {
-        const menuItem = this.menuItems.filter({ hasText: option }).first();
-        await menuItem.waitFor({ state: 'visible' });
+        const menuItem = this.getMenuItem(option);
+        await menuItem.waitFor({ state: 'visible', timeout: 15000 });
         await menuItem.click();
     }
 
@@ -47,7 +53,7 @@ export class SidePanel {
 
     async searchOption(option: SideMenuOptions): Promise<Locator> {
         await this.searchInput.fill(option);
-        const filteredItems = this.menuItems.filter({ hasText: option }).first();
+        const filteredItems = this.getMenuItem(option);
         await filteredItems.waitFor({ state: 'visible' });
         return filteredItems;
     }
