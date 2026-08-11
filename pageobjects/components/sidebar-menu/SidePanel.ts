@@ -57,20 +57,7 @@ export class SidePanel {
         await filteredItems.waitFor({ state: 'visible' });
         return filteredItems;
     }
-    /*static readonly EXPECTED_MENU_ITEMS = [
-        'Admin',
-        'PIM',
-        'Leave',
-        'Time',
-        'Recruitment',
-        'My Info',
-        'Performance',
-        'Dashboard',
-        'Directory',
-        'Maintenance',
-        'Claim',
-        'Buzz'
-    ];
+    /*
 
     async getMenuOptions(): Promise<string[]> {
         const menuItems = this.page.locator('.oxd-main-menu-item');
