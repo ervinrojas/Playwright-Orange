@@ -47,7 +47,7 @@ export class UserManagement {
         this.addUserButton = page.getByText('Add');
         this.userRoleDropdownOption = page.locator('div.oxd-grid-item--gutters').filter({ has: page.getByText('User Role') }).locator('div.oxd-select-text-input');
         this.employeeOption = page.getByText('ESS', {exact:true});
-        this.adminOption = page.getByText('Admin', {exact:true});
+        this.adminOption = page.getByRole('option', {name: 'Admin'});
         this.employeeNameInput = page.getByRole('textbox', {name: 'Type for hints...'});
         this.employeeRegistered = page.getByText('Qwerty Qwerty LName', {exact:true});
         
@@ -147,7 +147,7 @@ export class UserManagement {
     async selectUserRoleAdmin(){
         await this.userRoleDropdownOption.waitFor({state: 'visible'});
         await this.userRoleDropdownOption.click();
-        await this.adminOption.waitFor({state:'visible'});
+        await this.adminOption.waitFor({state: 'visible'});
         await this.adminOption.click();
     }
 

@@ -44,7 +44,7 @@ test.describe('Admin User Management', () => {
 
     });
 
-    test('Add new user', async ({ page }) => {
+    test('Add new ESS user', async ({ page }) => {
         
         const randomUsername = 'User' + crypto.randomUUID();
         const password = 'R4nD0m45..*';
@@ -55,6 +55,27 @@ test.describe('Admin User Management', () => {
 
         await addUser.clickAddUserButton();
         await addUser.selectUserRoleESS();
+        await addUser.fillEmployeeToSearch(employeeToSearch);
+        await addUser.fillUserStatusEnabled();
+        await addUser.fillUsernameInput(randomUsername);
+        await addUser.fillPasswordInput(password);
+        await addUser.fillConfirmPasswordInput(password);
+        await addUser.clickSaveButton();
+        await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
+
+    });
+
+    test('Add new Admin user', async ({ page }) => {
+        
+        const randomUsername = 'User' + crypto.randomUUID();
+        const password = 'R4nD0m45..*';
+        const employeeToSearch = 'Qwerty LName';
+        
+        const addUser = new UserManagement(page);
+        await addUser.waitForLoaded();
+
+        await addUser.clickAddUserButton();
+        await addUser.selectUserRoleAdmin();
         await addUser.fillEmployeeToSearch(employeeToSearch);
         await addUser.fillUserStatusEnabled();
         await addUser.fillUsernameInput(randomUsername);
