@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { UserModel } from '../../../models/UserModel';
 
 export enum roleDropdownOption {
     SELECT = '-- Select --',
@@ -64,22 +65,18 @@ export class UserManagement {
     }
 
     async clickUserManagement() {
-        await this.userManagementContainer.waitFor({ state: 'visible' });
         await this.userManagementContainer.click();
     }
 
     async clickUserOption() {
-        await this.userOption.waitFor({ state: 'visible' });
         await this.userOption.click();
     }
 
     async clickUserRoleDropdown() {
-        await this.userRoleDropdown.waitFor({ state: 'visible' });
         await this.userRoleDropdown.click();
     }
 
     async clickUserStatusDropdown() {
-        await this.userStatusDropdown.waitFor({ state: 'visible' });
         await this.userStatusDropdown.click();
     }
 
@@ -133,56 +130,65 @@ export class UserManagement {
     }
     
     async clickAddUserButton() {
-        await this.addUserButton.waitFor({state: 'visible'});
         await this.addUserButton.click();
     }
 
     async selectUserRoleESS(){
-        await this.userRoleDropdownOption.waitFor({state: 'visible'});
         await this.userRoleDropdownOption.click();
-        await this.employeeOption.waitFor({state:'visible'});
         await this.employeeOption.click();
     }
 
     async selectUserRoleAdmin(){
-        await this.userRoleDropdownOption.waitFor({state: 'visible'});
         await this.userRoleDropdownOption.click();
-        await this.adminOption.waitFor({state: 'visible'});
         await this.adminOption.click();
     }
 
     async fillEmployeeToSearch(name: string){
-        await this.employeeNameInput.waitFor({state:'visible'});
         await this.employeeNameInput.click();
-        await this.employeeNameInput.waitFor({state:'visible'});
         await this.employeeNameInput.fill(name);
-        await this.employeeRegistered.waitFor({state:'visible'});
         await this.employeeRegistered.click();
     }
 
     async fillUserStatusEnabled(){
-        await this.userStatusDropdownOption.waitFor({state: 'visible'});
         await this.userStatusDropdownOption.click();
         await this.userStatusOption.click();
     }
 
     async fillUsernameInput(username: string){
-        await this.usernameInput.waitFor({state:'visible'});
         await this.usernameInput.fill(username);
     }
 
     async fillPasswordInput(password: string){
-        await this.passwordInput.waitFor({state: 'visible'});
         await this.passwordInput.fill(password);
     }
 
     async fillConfirmPasswordInput(password: string){
-        await this.cpasswordInput.waitFor({state: 'visible'});
         await this.cpasswordInput.fill(password);
     }
 
     async clickSaveButton(){
-        await this.saveButton.waitFor({state: 'visible'});
         await this.saveButton.click();
+    }
+
+    async AddNewAdminUser(user: UserModel){
+        await this.clickAddUserButton();
+        await this.selectUserRoleAdmin();
+        await this.fillEmployeeToSearch(user.employee);
+        await this.fillUserStatusEnabled();
+        await this.fillUsernameInput(user.username);
+        await this.fillPasswordInput(user.password);
+        await this.fillConfirmPasswordInput(user.password);
+        await this.clickSaveButton();
+    }
+
+    async AddNewESSUser(user: UserModel){
+        await this.clickAddUserButton();
+        await this.selectUserRoleESS();
+        await this.fillEmployeeToSearch(user.employee);
+        await this.fillUserStatusEnabled();
+        await this.fillUsernameInput(user.username);
+        await this.fillPasswordInput(user.password);
+        await this.fillConfirmPasswordInput(user.password);
+        await this.clickSaveButton();
     }
 }

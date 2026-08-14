@@ -1,5 +1,6 @@
 import { expect, test } from '../../fixtures';
 import { roleDropdownOption, statusDropdownOption, UserManagement } from '../../../pageobjects/components/admin-section/UserManagement';
+import { UserModel } from '../../../models/UserModel';
 
 test.describe('Admin User Management', () => {
     test.beforeEach(async ({ page }) => {
@@ -53,14 +54,14 @@ test.describe('Admin User Management', () => {
         const addUser = new UserManagement(page);
         await addUser.waitForLoaded();
 
-        await addUser.clickAddUserButton();
-        await addUser.selectUserRoleESS();
-        await addUser.fillEmployeeToSearch(employeeToSearch);
-        await addUser.fillUserStatusEnabled();
-        await addUser.fillUsernameInput(randomUsername);
-        await addUser.fillPasswordInput(password);
-        await addUser.fillConfirmPasswordInput(password);
-        await addUser.clickSaveButton();
+        const userToAdd:UserModel = {
+            username: randomUsername,
+            employee: employeeToSearch,
+            password: password,
+            confirmpassword: password,
+        }
+
+        await addUser.AddNewESSUser(userToAdd)
         await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
 
     });
@@ -70,19 +71,18 @@ test.describe('Admin User Management', () => {
         const randomUsername = 'User' + crypto.randomUUID();
         const password = 'R4nD0m45..*';
         const employeeToSearch = 'Qwerty LName';
-        
-        const addUser = new UserManagement(page);
-        await addUser.waitForLoaded();
 
-        await addUser.clickAddUserButton();
-        await addUser.selectUserRoleAdmin();
-        await addUser.fillEmployeeToSearch(employeeToSearch);
-        await addUser.fillUserStatusEnabled();
-        await addUser.fillUsernameInput(randomUsername);
-        await addUser.fillPasswordInput(password);
-        await addUser.fillConfirmPasswordInput(password);
-        await addUser.clickSaveButton();
+        const userManagement = new UserManagement(page);
+        await userManagement.waitForLoaded();
+
+        const userToAdd:UserModel = {
+            username: randomUsername,
+            employee: employeeToSearch,
+            password: password,
+            confirmpassword: password,
+        }
+
+        await userManagement.AddNewAdminUser(userToAdd)
         await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
-
     });
 });
