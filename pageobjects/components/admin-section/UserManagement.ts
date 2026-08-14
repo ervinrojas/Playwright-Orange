@@ -25,16 +25,13 @@ export class UserManagement {
     private readonly statusOptions: Locator;
     private readonly addUserButton: Locator;
     private readonly userRoleDropdownOption: Locator;
-    private readonly employeeOption: Locator;
-    private readonly adminOption: Locator;
     private readonly employeeNameInput: Locator;
-    private readonly employeeRegistered: Locator;
     private readonly userStatusDropdownOption: Locator;
-    private readonly userStatusOption: Locator;
     private readonly usernameInput: Locator;
     private readonly passwordInput: Locator;
     private readonly cpasswordInput: Locator;
     private readonly saveButton: Locator;
+    private readonly passwordDontMatch: Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -47,17 +44,16 @@ export class UserManagement {
         this.statusOptions = page.getByRole('listbox').getByRole('option');
         this.addUserButton = page.getByText('Add');
         this.userRoleDropdownOption = page.locator('div.oxd-grid-item--gutters').filter({ has: page.getByText('User Role') }).locator('div.oxd-select-text-input');
-        this.employeeOption = page.getByText('ESS', {exact:true});
-        this.adminOption = page.getByRole('option', {name: 'Admin'});
+        
         this.employeeNameInput = page.getByRole('textbox', {name: 'Type for hints...'});
-        this.employeeRegistered = page.getByText('Qwerty Qwerty LName', {exact:true});
         
         this.userStatusDropdownOption = page.locator('div.oxd-grid-item--gutters').filter({ has: page.getByText('Status', {exact:true}) }).locator('div.oxd-select-text-input');
-        this.userStatusOption = page.getByText('Enabled', {exact:true});
+        
         this.usernameInput = page.locator('div.oxd-grid-item--gutters').filter({ has: page.getByText('Username', {exact: true}) }).getByRole('textbox');
         this.passwordInput = page.locator('div.oxd-grid-item--gutters').filter({ has: page.getByText('Password', {exact: true}) }).getByRole('textbox');
         this.cpasswordInput = page.locator('div.oxd-grid-item--gutters').filter({ has: page.getByText('Confirm Password', {exact: true}) }).getByRole('textbox');
         this.saveButton = page.getByRole('button', {name: 'Save'});
+        this.passwordDontMatch = page.locator('span.oxd-input-field-error-message').getByText('Passwords do not match', {exact:true});
     }
 
     async waitForLoaded() {
@@ -133,25 +129,20 @@ export class UserManagement {
         await this.addUserButton.click();
     }
 
-    async selectUserRoleESS(){
+    async selectUserRole(userRole: string){
         await this.userRoleDropdownOption.click();
-        await this.employeeOption.click();
-    }
-
-    async selectUserRoleAdmin(){
-        await this.userRoleDropdownOption.click();
-        await this.adminOption.click();
+        await this.page.getByRole('option', {name: userRole}).click();
     }
 
     async fillEmployeeToSearch(name: string){
         await this.employeeNameInput.click();
         await this.employeeNameInput.fill(name);
-        await this.employeeRegistered.click();
+        await this.page.getByText(name, {exact:true}).click();
     }
 
-    async fillUserStatusEnabled(){
+    async fillUserStatusEnabled(status: string){
         await this.userStatusDropdownOption.click();
-        await this.userStatusOption.click();
+        await this.page.getByText(status, {exact:true}).click();
     }
 
     async fillUsernameInput(username: string){
@@ -170,25 +161,15 @@ export class UserManagement {
         await this.saveButton.click();
     }
 
-    async AddNewAdminUser(user: UserModel){
+    async AddNewUser(user: UserModel){
         await this.clickAddUserButton();
-        await this.selectUserRoleAdmin();
+        await this.selectUserRole(user.role);
         await this.fillEmployeeToSearch(user.employee);
-        await this.fillUserStatusEnabled();
+        await this.fillUserStatusEnabled(user.status);
         await this.fillUsernameInput(user.username);
         await this.fillPasswordInput(user.password);
-        await this.fillConfirmPasswordInput(user.password);
+        await this.fillConfirmPasswordInput(user.confirmpassword);
         await this.clickSaveButton();
     }
 
-    async AddNewESSUser(user: UserModel){
-        await this.clickAddUserButton();
-        await this.selectUserRoleESS();
-        await this.fillEmployeeToSearch(user.employee);
-        await this.fillUserStatusEnabled();
-        await this.fillUsernameInput(user.username);
-        await this.fillPasswordInput(user.password);
-        await this.fillConfirmPasswordInput(user.password);
-        await this.clickSaveButton();
-    }
 }

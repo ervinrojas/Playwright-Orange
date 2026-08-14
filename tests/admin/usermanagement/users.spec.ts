@@ -1,6 +1,7 @@
 import { expect, test } from '../../fixtures';
 import { roleDropdownOption, statusDropdownOption, UserManagement } from '../../../pageobjects/components/admin-section/UserManagement';
 import { UserModel } from '../../../models/UserModel';
+import { UserFactory } from '../../../factory/UserFactory'
 
 test.describe('Admin User Management', () => {
     test.beforeEach(async ({ page }) => {
@@ -47,42 +48,55 @@ test.describe('Admin User Management', () => {
 
     test('Add new ESS user', async ({ page }) => {
         
-        const randomUsername = 'User' + crypto.randomUUID();
-        const password = 'R4nD0m45..*';
-        const employeeToSearch = 'Qwerty LName';
-        
         const addUser = new UserManagement(page);
         await addUser.waitForLoaded();
 
-        const userToAdd:UserModel = {
-            username: randomUsername,
-            employee: employeeToSearch,
-            password: password,
-            confirmpassword: password,
-        }
+        const ESSUser = UserFactory.createEmployeeESS({
+            role: 'ESS'
+        })
 
-        await addUser.AddNewESSUser(userToAdd)
+        await addUser.AddNewUser(ESSUser)
         await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
 
     });
 
     test('Add new Admin user', async ({ page }) => {
-        
-        const randomUsername = 'User' + crypto.randomUUID();
-        const password = 'R4nD0m45..*';
-        const employeeToSearch = 'Qwerty LName';
 
         const userManagement = new UserManagement(page);
         await userManagement.waitForLoaded();
 
-        const userToAdd:UserModel = {
-            username: randomUsername,
-            employee: employeeToSearch,
-            password: password,
-            confirmpassword: password,
-        }
+        const adminUser = UserFactory.createAdmin({
+            role: 'Admin'
+        })
 
-        await userManagement.AddNewAdminUser(userToAdd)
+        await userManagement.AddNewUser(adminUser)
         await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
     });
+
+    test('Add new ESS user Password do not match', async ({ page }) => {
+
+        const userManagement = new UserManagement(page);
+        await userManagement.waitForLoaded();
+
+        const ESSUser = UserFactory.createEmployeeESS({
+            confirmpassword: 'PasswordDoNotMatch'
+        })
+
+        await userManagement.AddNewUser(ESSUser)
+        await expect(page.locator('span.oxd-input-field-error-message')).toHaveText('Passwords do not match')
+    });
+
+    test('Add new ESS user - Disabled status', async ({ page }) => {
+
+        const userManagement = new UserManagement(page);
+        await userManagement.waitForLoaded();
+
+        const ESSUser = UserFactory.createEmployeeESS({
+            status: 'Disabled'
+        })
+
+        await userManagement.AddNewUser(ESSUser)
+        await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
+    });
+
 });

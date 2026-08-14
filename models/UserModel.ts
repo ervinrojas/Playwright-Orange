@@ -3,4 +3,6 @@ export interface UserModel {
     username:string,
     password:string,
     confirmpassword:string
+    role:string,
+    status:string
 }
