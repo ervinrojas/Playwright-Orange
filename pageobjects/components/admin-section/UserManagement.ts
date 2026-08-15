@@ -137,7 +137,9 @@ export class UserManagement {
     async fillEmployeeToSearch(name: string){
         await this.employeeNameInput.click();
         await this.employeeNameInput.fill(name);
-        await this.page.getByText(name, {exact:true}).click();
+        const autoCompleted = this.page.getByText(name, {exact:true})
+        await autoCompleted.waitFor({state: 'visible'}) 
+        await autoCompleted.click();
     }
 
     async fillUserStatusEnabled(status: string){
