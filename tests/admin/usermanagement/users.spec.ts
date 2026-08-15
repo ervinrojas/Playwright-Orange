@@ -1,6 +1,6 @@
 import { expect, test } from '../../fixtures';
 import { roleDropdownOption, statusDropdownOption, UserManagement } from '../../../pageobjects/components/admin-section/UserManagement';
-import { UserModel } from '../../../models/UserModel';
+import { UsersTable } from '../../../pageobjects/components/admin-section/UsersTable';
 import { UserFactory } from '../../../factory/UserFactory'
 
 test.describe('Admin User Management', () => {
@@ -98,5 +98,24 @@ test.describe('Admin User Management', () => {
         await userManagement.AddNewUser(ESSUser)
         await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
     });
+
+    test('Add new Admin user - with Admin employee', async ({ page }) => {
+
+        const addUser = new UsersTable(page);
+        await addUser.editFirstAdminOnTheTable()
+
+        const addNewUserPage = new UserManagement(page)
+        const fullUserToSearch = await addNewUserPage.getEmployeeName()
+
+        const Adminser = UserFactory.createAdmin({
+            employee: fullUserToSearch
+        })
+
+        await page.goBack()
+        await addNewUserPage.AddNewUser(Adminser)
+        await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
+    });
+
+
 
 });

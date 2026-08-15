@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { expect, Locator, Page } from '@playwright/test';
 import { UserModel } from '../../../models/UserModel';
 
 export enum roleDropdownOption {
@@ -170,6 +170,14 @@ export class UserManagement {
         await this.fillPasswordInput(user.password);
         await this.fillConfirmPasswordInput(user.confirmpassword);
         await this.clickSaveButton();
+    }
+
+    async getEmployeeName(): Promise<string>{
+        const employeeInput = await this.page.getByRole('textbox', {name: 'Type for hints...'})
+        await expect(employeeInput).not.toBeEmpty()
+        const fullUserToSearch = await employeeInput.inputValue();
+        console.log(`User to search ${fullUserToSearch}`)
+        return fullUserToSearch
     }
 
 }
