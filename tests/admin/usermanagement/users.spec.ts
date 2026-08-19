@@ -116,6 +116,27 @@ test.describe('Admin User Management', () => {
         await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
     });
 
+    test('Delete user Admin - with Admin employee', async ({ page }) => {
+
+        const deleteUser = new UsersTable(page);
+        await deleteUser.editFirstAdminOnTheTable()
+
+        const addNewUserPage = new UserManagement(page)
+        const fullUserToSearch = await addNewUserPage.getEmployeeName()
+
+        const AdminUser = UserFactory.createAdmin({
+            employee: fullUserToSearch
+        })
+
+        await page.goBack()
+        await addNewUserPage.AddNewUser(AdminUser)
+        await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved')
+
+        await deleteUser.deleteAdminOnTheTable(AdminUser.username)
+        await deleteUser.acceptDeleteUser()
+        await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Deleted')
+    });
+
 
 
 });

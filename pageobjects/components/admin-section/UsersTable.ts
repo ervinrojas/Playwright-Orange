@@ -20,7 +20,7 @@ export class UsersTable {
         return currentAdminRows
     }
 
-    private async getgetFirstAdminFromTable(): Promise<Locator> {
+    private async getFirstAdminFromTable(): Promise<Locator> {
         const currentAdminRows = this.getAdminRows()
         const firstAdminToSearch = currentAdminRows.nth(0)
         await expect(firstAdminToSearch, 'No admin users found in the table').toHaveCount(1)
@@ -28,11 +28,26 @@ export class UsersTable {
     }
 
     async editFirstAdminOnTheTable(){
-        const firstAdminToEdit = await this.getgetFirstAdminFromTable()
+        const firstAdminToEdit = await this.getFirstAdminFromTable()
         await firstAdminToEdit
             .locator('button')
             .filter({has: this.page.locator('i.bi-pencil-fill')}).click()
     }
 
+    async deleteAdminOnTheTable(username:string){
+        const allBodyRows = this.getAllBodyRows()
+        const filteredRowsByUsername = allBodyRows.filter({
+            has: this.page.getByRole('cell').nth(1).getByText(username)
+        })
+        expect(filteredRowsByUsername, 'No rows contain username: ${username} were found').toHaveCount(1)
+
+        await filteredRowsByUsername
+            .locator('button')
+            .filter({has: this.page.locator('i.bi-trash')}).click()
+    }
+
+    async acceptDeleteUser(){
+        await this.page.getByRole('button', {name: /Yes, Delete/}).click()
+    }
 
 }
