@@ -148,5 +148,3 @@ vite.config.ts.timestamp-*
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-/playwright/.auth/admin.json
-/playwright/.auth/employee.json
