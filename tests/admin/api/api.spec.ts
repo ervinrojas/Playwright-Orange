@@ -3,7 +3,7 @@ import { readFile } from 'fs/promises';
 import * as path from 'path';
 
 
-test('API Get all users', async ({ page, request}) => {
+test('API Get all users 200 OK', async ({ page, request}) => {
     const authFilePath = path.resolve(process.cwd(), '.auth', 'admin.json')
     const authState = JSON.parse(await readFile(authFilePath, 'utf-8')) as {
       cookies?: Array<{name: string, value: string}>
@@ -24,4 +24,20 @@ test('API Get all users', async ({ page, request}) => {
 
     const bodyJson = await response.json()
     console.log(JSON.stringify(await bodyJson))
+})
+
+test('API Get all users 401 Unauthorized', async ({ page, request}) => {
+
+    const cookieHeader = `orangehrm=invalid_value-to-force_response_401`  
+
+    const response = await request.get('https://opensource-demo.orangehrmlive.com/web/index.php/api/v2/admin/users?limit=50&offset=0&sortField=u.userName&sortOrder=ASC',{
+      headers: {
+        Cookie: cookieHeader,
+        Accept: 'application/json'
+      }
+    })
+    expect(response.status()).toBe(401)
+
+    const bodyJson = await response.json()
+    console.log('Response body (401): ', await response.text());
 })
