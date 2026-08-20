@@ -1,6 +1,10 @@
 import {test, expect} from '@playwright/test';
 import { LoginPage } from '../pageobjects/pages/LoginPage';
 import { SideMenuOptions, SidePanel } from '../pageobjects/components/sidebar-menu/SidePanel';
+import { request } from 'node:http';
+import path from 'node:path';
+import { readFile } from 'node:fs';
+
 
 test('Get all usernames registered', async ({ page }) => {
   const loginPage = new LoginPage(page)
@@ -182,7 +186,6 @@ test('Filter by user admin', async ({ page }) => {
     for(let i=0; i<expectedAdminCount; i++){
       await expect(allBodyRows.nth(i).getByRole('cell').nth(2)).toContainText('Admin')
     }
-
 })
-    
+
 
