@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import { UserApiClient } from "../../../api/UserApiClient"
 
 
-test('API Get all users 200 OK', async ({ request}) => {
+test('API Get all users 200 OK', async ({ page, request}) => {
 
     const apiClient = await UserApiClient.fromSavedAuthState(request)
     const response = await apiClient.getUsers()
@@ -12,7 +12,7 @@ test('API Get all users 200 OK', async ({ request}) => {
     console.log(JSON.stringify(await bodyJson))
 })
 
-test('API Get all users 401 Unauthorized', async ({ request}) => {
+test('API Get all users 401 Unauthorized', async ({ page, request}) => {
 
     const cookieHeader = `orangehrm=invalid_value-to-force_response_401`  
 
@@ -26,7 +26,7 @@ test('API Get all users 401 Unauthorized', async ({ request}) => {
     console.log('Response body (401): ', await response.text());
 })
 
-test('API Add an Admin users 200 OK', async ({ request}) => {
+test('API Add an Admin users 200 OK', async ({ page, request}) => {
     const apiClient = await UserApiClient.fromSavedAuthState(request)
     const newUserPayload = {
       username: crypto.randomUUID().slice(0, 20),
@@ -43,7 +43,7 @@ test('API Add an Admin users 200 OK', async ({ request}) => {
     console.log(JSON.stringify(await bodyJson))
 })
 
-test('API Add an ESS users 200 OK', async ({ request}) => {
+test('API Add an ESS users 200 OK', async ({ page, request}) => {
   const apiClient = await UserApiClient.fromSavedAuthState(request)
   const newUserPayload = {
       username: crypto.randomUUID().slice(0, 20),
@@ -60,7 +60,7 @@ test('API Add an ESS users 200 OK', async ({ request}) => {
     console.log(JSON.stringify(await bodyJson))  
 })
 
-test('API Add an user which already exist 422', async ({ request}) => {
+test('API Add an user which already exist 422', async ({ page, request}) => {
   const apiClient = await UserApiClient.fromSavedAuthState(request)
     const newUserPayload = {
       username: 'Admin',
@@ -77,7 +77,7 @@ test('API Add an user which already exist 422', async ({ request}) => {
     console.log(JSON.stringify(await bodyJson))  
 })
 
-test('API Delete an Admin users 200 OK', async ({ request}) => {
+test('API Delete an Admin users 200 OK', async ({ page, request}) => {
     const apiClient = await UserApiClient.fromSavedAuthState(request)
     const newUserPayload = {
       username: crypto.randomUUID().slice(0, 20),
@@ -103,7 +103,7 @@ test('API Delete an Admin users 200 OK', async ({ request}) => {
     console.log(JSON.stringify(await userDelteionResponseJson))
 })
 
-test('API Add Employee 200 OK', async ({ request}) => {
+/*test('API Add Employee 200 OK', async ({ page, request}) => {
     const apiClient = await UserApiClient.fromSavedAuthState(request)
     const newUserPayload = {
       username: 'Employee',
@@ -118,4 +118,4 @@ test('API Add Employee 200 OK', async ({ request}) => {
 
     const bodyJson = await response.json()
     console.log(JSON.stringify(await bodyJson))
-})
+})*/

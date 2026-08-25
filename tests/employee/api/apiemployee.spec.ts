@@ -2,7 +2,7 @@ import {test, expect} from '@playwright/test';
 import { UserApiClient } from '../../../api/UserApiClient';
 
 
-test('API Get all users 403 Unauthorized', async ({ request}) => {
+test('API Get all users 403 Unauthorized', async ({ page, request}) => {
   const apiClient = await UserApiClient.fromSavedAuthStateEmp(request)
   const response = await apiClient.getUsers()
   expect(response.status()).toBe(403)
