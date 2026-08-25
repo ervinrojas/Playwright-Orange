@@ -1,10 +1,14 @@
 import {test, expect} from '@playwright/test';
-import { readFile } from 'fs/promises';
-import * as path from 'path';
+import { UserApiClient } from '../../../api/UserApiClient';
 
 
 test('API Get all users 403 Unauthorized', async ({ request}) => {
-    const authFilePath = path.resolve(process.cwd(), '.auth', 'employee.json')
+  const apiClient = await UserApiClient.fromSavedAuthStateEmp(request)
+  const response = await apiClient.getUsers()
+  expect(response.status()).toBe(403)
+
+  console.log('Response body (403): ', await response.text());
+  /*const authFilePath = path.resolve(process.cwd(), '.auth', 'employee.json')
     const authState = JSON.parse(await readFile(authFilePath, 'utf-8')) as {
       cookies?: Array<{name: string, value: string}>
     }
@@ -22,5 +26,5 @@ test('API Get all users 403 Unauthorized', async ({ request}) => {
     })
     expect(response.status()).toBe(403)
 
-    console.log('Response body (403): ', await response.text());
+    console.log('Response body (403): ', await response.text());*/
 })
